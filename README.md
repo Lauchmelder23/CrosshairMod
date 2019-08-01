@@ -15,3 +15,8 @@ Be careful when modifying setting files!
 ### v0.2
   * Added customizability in form of settings file
   * Start logging events
+
+#### v0.2.1
+  * Restructured project 
+  * Added buttons
+  * Added functionality to toggle crosshair
