@@ -13,17 +13,10 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Mod
-{
+namespace CrosshairMod
+{ 
     public class Main : MonoBehaviour
     {
-        // Logs a message made by this mod
-        // [CROSSHAIRMOD]Message
-        private void Log(string message)
-        {
-            System.Console.WriteLine("[CROSSHAIRMOD]" + message);
-        }
-
         // Initialize Settings dictionary
         private Dictionary<string, int> m_settings = new Dictionary<string, int>();
 
@@ -37,7 +30,7 @@ namespace Mod
         // Reads settings file and sets all variables
         private bool readSettings(string filepath, ref Dictionary<string, int> sett_dict)
         {
-            Log("Accessing Settings at " + filepath);
+            Logging.Log("Accessing Settings at " + filepath);
 
             // Try to read file contents into string
             string settings = "";
@@ -47,7 +40,7 @@ namespace Mod
             } catch(Exception e)
             {
                 // Log error and return invalid state
-                Log(e.Message);
+                Logging.LogError(e.Message);
                 return false;
             }
 
@@ -66,7 +59,7 @@ namespace Mod
                 sett_dict.Add(vals[0], Int32.Parse(vals[1]));   // Store key and value in settings dictionary
             }
 
-            Log("Successfully loaded settings!");
+            Logging.Log("Successfully loaded settings!");
 
             return true;    // Return valid state
         }
@@ -81,37 +74,37 @@ namespace Mod
             // return an invalid state
             if (!m_settings.TryGetValue("crosshairLength", out m_crosshairLength))
             {
-                Log("Missing Setting: crosshairLength");
+                Logging.LogError("Missing Setting: crosshairLength");
                 return false;
             }
 
             if (!m_settings.TryGetValue("crosshairThickness", out m_crosshairThickness))
             {
-                Log("Missing Setting: crosshairThickness");
+                Logging.LogError("Missing Setting: crosshairThickness");
                 return false;
             }
 
             if (!m_settings.TryGetValue("crosshairColorRed", out m_crosshairColorRed))
             {
-                Log("Missing Setting: crosshairColorRed");
+                Logging.LogError("Missing Setting: crosshairColorRed");
                 return false;
             }
 
             if (!m_settings.TryGetValue("crosshairColorGreen", out m_crosshairColorGreen))
             {
-                Log("Missing Setting: crosshairColorGreen");
+                Logging.LogError("Missing Setting: crosshairColorGreen");
                 return false;
             }
 
             if (!m_settings.TryGetValue("crosshairColorBlue", out m_crosshairColorBlue))
             {
-                Log("Missing Setting: crosshairColorBlue");
+                Logging.LogError("Missing Setting: crosshairColorBlue");
                 return false;
             }
 
             if (!m_settings.TryGetValue("crosshairColorAlpha", out m_crosshairColorAlpha))
             {
-                Log("Missing Setting: crosshairColorAlpha");
+                Logging.LogError("Missing Setting: crosshairColorAlpha");
                 return false;
             }
 
@@ -167,10 +160,15 @@ namespace Mod
             // Read settings, if this fails, the state will be invalid
             m_validState = readSettings(".\\Blackwake_Data\\Managed\\Mods\\chSettings.sett", ref m_settings);
             foreach (KeyValuePair<string, int> setting in m_settings)
-                Log(setting.Key + ": " + setting.Value);
+                Logging.Log(setting.Key + ": " + setting.Value);
         }
+
+        private Button testBtn = new Button(500, 500, 300, 200, "Test Button", () => { Logging.Log("Test Button pressed"); });
+
         void OnGUI()
         {
+            testBtn.Update();
+
             // If the mod is in an invalid state, the OnGUI function won't execute
             if (m_validState)
             {
