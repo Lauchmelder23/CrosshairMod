@@ -46,6 +46,8 @@ namespace Mod
                 sett_dict.Add(vals[0], Int32.Parse(vals[1]));
             }
 
+            Log("Successfully loaded settings!");
+
             return true;
         }
 
