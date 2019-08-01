@@ -9,28 +9,33 @@ using UnityEngine;
 namespace CrosshairMod
 {
     // Button Wrapper class, utilizing GUI.Button()
-    public class Button
+    class GUIButton
     {
+
         public Vector2 position = new Vector2(0, 0);
         public Vector2 dimensions = new Vector2(0, 0);
         public string label = "";
-        public Action OnClick = new Action(() => { });
+        public event EventHandler OnClick;
 
-        public Button(uint x, uint y, uint width, uint height, string label, Action e)
+        public GUIButton(uint x, uint y, uint width, uint height, string label)
         {
+            Logging.Log("Button Constructor");
+
             this.position = new Vector2(x, y);
             this.dimensions = new Vector2(width, height);
             this.label = label;
-            this.OnClick = e;
         }
 
-        public Button() { /*Empty*/ }
+        public GUIButton()
+        {
+            // Empty
+        }
 
         public void Update()
         {
-            bool buttonClicked = GUI.Button(new Rect(position, dimensions), label);
-            if (buttonClicked)
-                OnClick();
+            bool buttonPressed = GUI.Button(new Rect(position, dimensions), label);
+            if (buttonPressed)
+                OnClick?.Invoke(this, EventArgs.Empty);
         }
     }
 }
