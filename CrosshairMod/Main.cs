@@ -1,4 +1,12 @@
-﻿using System;
+﻿/* 
+ * Source code of a mode that adds a crosshair into
+ * the game Blackwake.
+ * 
+ * @author Lauchmelder
+ * @version v0.2
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
