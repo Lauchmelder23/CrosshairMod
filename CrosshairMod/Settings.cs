@@ -46,20 +46,69 @@ namespace CrosshairMod
             Logging.Log("Successfully loaded settings!");
         }
 
-        public static void writeSettings(string filepath)
+        // Converts the dictionary to a sett file
+        public static void SaveSettings(string filepath)
         {
-            //TODO: Implement saving
+            string filecontent = "";
+            foreach(KeyValuePair<string, int> pair in m_settings)
+            {
+                filecontent += (pair.Key + "=" + pair.Value + "\n");
+            }
+
+            System.IO.File.WriteAllText(filepath, filecontent);
+        }
+
+        // Adds a setting to the settings
+        public static void AddSetting(string key, int value)
+        {
+            if (m_settings.ContainsKey(key))
+                return;
+
+            m_settings.Add(key, value);
+        }
+
+        // Changes a settings value
+        public static void SetSetting(string key, int newVal, bool addIfDoesntExist = false)
+        {
+
+            if(!m_settings.ContainsKey(key))
+            {
+                if (!addIfDoesntExist)
+                {
+                    Logging.LogError("Tried to change a setting with key \"" + key + "\" that doesn't exist.");
+                    return;
+                }
+                else
+                {
+                    AddSetting(key, newVal);
+                    Logging.LogWarning("Tried to change a setting with key \"" + key + "\" that doesn't exist. It has been added now.");
+                }
+            }
+
+            m_settings[key] = newVal;
         }
 
         // Tries to return the value belonging to a certain key
         // If the specified key doesn't exist, it returns 0 and logs an error
-        public static int GetValue(string key)
+        // One can also specify that the setting should be created with some initial value
+        public static int GetValue(string key, bool addIfDoesntExist = false, int initialValue = 0)
         {
             int value = 0;
             bool valExists = m_settings.TryGetValue(key, out value);
 
             if (!valExists)
-                Logging.LogError("Tried to access unknown setting: \"" + key + "\". Check your chSettings.sett for errors.");
+            {
+                if (!addIfDoesntExist)
+                {
+                    Logging.LogError("Tried to access unknown setting: \"" + key + "\". Check your chSettings.sett for errors.");
+                }
+                else
+                {
+                    AddSetting(key, initialValue);
+                    Logging.LogWarning("Tried to access unknown setting: \"" + key + "\". A new setting with this key was created.");
+                    return initialValue;
+                }
+            }
 
             return value;
         }

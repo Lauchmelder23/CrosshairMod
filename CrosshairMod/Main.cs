@@ -17,16 +17,8 @@ namespace CrosshairMod
 { 
     public class Main : MonoBehaviour
     {
-        // Initialize State checker. If this is false, the crosshair won't be drawn
-        // This is a temporary fix to stop this mod from spamming errors in the log
-        private bool m_validState = true;
-        private bool m_renderCrosshair = true;
-       
-        // Reads settings file and sets all variables
-        
-
-        
-
+        private const string MENU_OPEN_KEY = "H";
+        private const string CH_TOGGLE_KEY = "J";
 
         // This will be executed first
         void Start()
@@ -35,19 +27,34 @@ namespace CrosshairMod
             Settings.LoadSettings(".\\Blackwake_Data\\Managed\\Mods\\chSettings.sett");
             // Create Crosshair
             Crosshair.Create();
-
-            // Add function to Button
-            crosshairButton.OnClick += (object sender, EventArgs e) => { Crosshair.Toggle(); };
+            // Create Panel
+            Interface.Init();
         }
-
-        private GUIButton crosshairButton = new GUIButton(200, 10, 100, 20, "Toggle Crosshair");
 
         void OnGUI()
         {
-            crosshairButton.Update();
+            // Check for Key press
+            if(Event.current.Equals(Event.KeyboardEvent(MENU_OPEN_KEY)))
+            {
+                Interface.Toggle();
+            }
 
+            if (Event.current.Equals(Event.KeyboardEvent(CH_TOGGLE_KEY)))
+            {
+                Crosshair.Toggle();
+            }
+
+            //Render GUI
+            Interface.Render();
             //Render Crosshair
             Crosshair.Render();
+        }
+
+        void OnApplicationQuit()
+        {
+            // Save settings
+            Settings.SaveSettings(".\\Blackwake_Data\\Managed\\Mods\\chSettings.sett");
+            Logging.Log("Saved Settings");
         }
     }
 }

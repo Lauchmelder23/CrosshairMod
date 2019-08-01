@@ -13,11 +13,44 @@ namespace CrosshairMod
         private static Texture2D m_texture = new Texture2D(0, 0);
         private static GUIStyle m_style;
         private static bool m_enabled = true;
+        private static bool m_validState = true;
 
         // Toggles visibilty of the crosshair
         public static void Toggle()
         {
             m_enabled = !m_enabled;
+            Settings.SetSetting("crosshairVisible", 1, true);
+        }
+
+        // Change Color
+        public static void SetColor(int r, int g, int b, int a)
+        {
+            Settings.SetSetting("crosshairColorRed", r);
+            Settings.SetSetting("crosshairColorGreen", g);
+            Settings.SetSetting("crosshairColorBlue", b);
+            Settings.SetSetting("crosshairColorAlpha", a);
+
+            Create();
+        }
+
+        // Change Size
+        public static void ChangeSize(int difference)
+        {
+            int currentLength = Settings.GetValue("crosshairLength");
+            Settings.SetSetting("crosshairLength", currentLength + difference);
+
+            // Re-create crosshair with new settings
+            Create();
+        }
+
+        // Change Thickness
+        public static void ChangeThickness(int difference)
+        {
+            int currentThickness = Settings.GetValue("crosshairThickness");
+            Settings.SetSetting("crosshairThickness", currentThickness + difference);
+
+            // Re-create crosshair with new settings
+            Create();
         }
 
         // This must be called, or else no crosshair will be rendered
@@ -25,12 +58,12 @@ namespace CrosshairMod
         {
             // Creates a crosshair texture
             // Assign dictionary values to variables
-            int m_crosshairLength = Settings.GetValue("crosshairLength");
-            int m_crosshairThickness = Settings.GetValue("crosshairThickness");
-            int m_crosshairColorRed = Settings.GetValue("crosshairColorRed");
-            int m_crosshairColorGreen = Settings.GetValue("crosshairColorGreen");
-            int m_crosshairColorBlue = Settings.GetValue("crosshairColorBlue");
-            int m_crosshairColorAlpha = Settings.GetValue("crosshairColorAlpha");
+            int m_crosshairLength = Settings.GetValue("crosshairLength", true, 15);
+            int m_crosshairThickness = Settings.GetValue("crosshairThickness", true, 3);
+            int m_crosshairColorRed = Settings.GetValue("crosshairColorRed", true, 255);
+            int m_crosshairColorGreen = Settings.GetValue("crosshairColorGreen", true, 94);
+            int m_crosshairColorBlue = Settings.GetValue("crosshairColorBlue", true, 244);
+            int m_crosshairColorAlpha = Settings.GetValue("crosshairColorAlpha", true, 255);
 
             // Construct color object from RGBA values
             Color m_crosshairColor = new Color(m_crosshairColorRed / 255f,
@@ -81,22 +114,26 @@ namespace CrosshairMod
 
         public static void Render()
         {
-            if(InvalidCrosshair())
+            if (m_validState)
             {
-                Logging.LogWarning("Crosshair was either not initialized, or has an invalid size of (0, 0). Check your settings file and adjust your settings accordingly");
-                return;
-            }
+                if (InvalidCrosshair())
+                {
+                    Logging.LogWarning("Crosshair was either not initialized, or has an invalid size of (0, 0). Check your settings file and adjust your settings accordingly");
+                    return;
+                }
 
-            if (m_enabled)
-                GUI.Label(new Rect(Screen.width / 2 - m_texture.width / 2, Screen.height / 2 - m_texture.height / 2, m_texture.width, m_texture.height),
-                    m_texture, m_style);
+                if (m_enabled)
+                    GUI.Label(new Rect(Screen.width / 2 - m_texture.width / 2, Screen.height / 2 - m_texture.height / 2, m_texture.width, m_texture.height),
+                        m_texture, m_style);
+            }
         }
 
 
         private static bool InvalidCrosshair()
         {
             // Check if the texture is bigger than (0, 0) to see if it was initialized.
-            return (m_texture.width == 0 && m_texture.height == 0);
+            m_validState = (m_texture.width != 0 && m_texture.height != 0);
+            return !m_validState;
         }
     }
 }
