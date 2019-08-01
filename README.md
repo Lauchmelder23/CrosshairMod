@@ -1,4 +1,4 @@
-# CrosshairMod v0.2
+# CrosshairMod v0.3
 A Blackwake Mod that adds a crosshair
 
 Simply copy and paste the *CrosshairMod.dll* and the *chSettings.sett* 
