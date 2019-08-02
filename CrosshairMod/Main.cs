@@ -31,6 +31,7 @@ namespace CrosshairMod
         // This will be executed first
         void Start()
         {
+
             // Update the settings
             Settings.LoadSettings(".\\Blackwake_Data\\Managed\\Mods\\chSettings.sett");
             // Create Crosshair
