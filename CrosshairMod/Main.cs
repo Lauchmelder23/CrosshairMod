@@ -3,8 +3,9 @@
  * the game Blackwake.
  * 
  * @author Lauchmelder
- * @version v0.2
+ * @version v0.3
  */
+
 
 using System;
 using System.Collections.Generic;
@@ -15,8 +16,16 @@ using UnityEngine;
 
 namespace CrosshairMod
 { 
+
+    /*
+     * This is the Main class that is responsible for
+     * handling initializing and updating the components
+     * of the crosshair mod. 
+     */
     public class Main : MonoBehaviour
     {
+        // Define Hotkeys for Menu and Crosshair Toggle
+        // TODO: Make Hotkeys editable for the User
         private const string MENU_OPEN_KEY = "H";
         private const string CH_TOGGLE_KEY = "J";
 
@@ -31,16 +40,19 @@ namespace CrosshairMod
             Interface.Init();
         }
 
+        // This gets called on every GUI Update (Can be multiple tiems per Frame)
         void OnGUI()
         {
-            // Check for Key press
+            // Check for Key presses
             if(Event.current.Equals(Event.KeyboardEvent(MENU_OPEN_KEY)))
             {
+                // Toggle Crosshair GUI
                 Interface.Toggle();
             }
 
             if (Event.current.Equals(Event.KeyboardEvent(CH_TOGGLE_KEY)))
             {
+                // Toggle Crosshair
                 Crosshair.Toggle();
             }
 
@@ -50,11 +62,12 @@ namespace CrosshairMod
             Crosshair.Render();
         }
 
+        // Will be called when the application is closed
         void OnApplicationQuit()
         {
             // Save settings
             Settings.SaveSettings(".\\Blackwake_Data\\Managed\\Mods\\chSettings.sett");
-            Logging.Log("Saved Settings");
+            Logging.Debug.Log("Saved Settings");
         }
     }
 }
