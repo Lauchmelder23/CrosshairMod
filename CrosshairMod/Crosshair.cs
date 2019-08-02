@@ -29,6 +29,12 @@ namespace CrosshairMod
             Settings.SetSetting("crosshairVisible", 1, true);
         }
 
+        // Returns wether the crosshair is enabled
+        public static bool Enabled()
+        {
+            return m_enabled;
+        }
+
         // Change Color
         public static void SetColor(int r, int g, int b, int a)
         {

@@ -34,7 +34,8 @@ namespace CrosshairMod
 
 
         // Creates a new button object and adds it to the ButtonList
-        private static void AddButton(uint x, uint y, uint width, uint height, string label, params EventHandler[] onClickEvent)
+        // Returns the index of the button
+        private static int AddButton(uint x, uint y, uint width, uint height, string label, params EventHandler[] onClickEvent)
         {
             GUIButton buttonObj = new GUIButton(x, y, width, height, label);
             foreach(EventHandler e in onClickEvent)
@@ -43,6 +44,7 @@ namespace CrosshairMod
             }
 
             m_buttons.Add(buttonObj);
+            return m_buttons.Count - 1;
         }
 
         // Initializes all Buttons, gives them their function etc
@@ -65,8 +67,9 @@ namespace CrosshairMod
 
             // Create Crosshair Visibilty Button
             // TODO: Make Button change label depending on Crosshait State (e.g. if it's hidden the label should be "Show", and vice versa)
-            AddButton((uint)m_position.x + 20, (uint)m_position.y + 20, 200, 30, 
-                "Toggle Crosshair", (object sender, EventArgs e) => { Crosshair.Toggle(); });
+            int index = AddButton((uint)m_position.x + 20, (uint)m_position.y + 20, 200, 30, 
+                "Hide Crosshair", (object sender, EventArgs e) => { Crosshair.Toggle(); });
+            m_buttons[index].OnClick += (object sender, EventArgs args) => { m_buttons[index].label = (Crosshair.Enabled()) ? "Show Crosshair" : "Hide Crosshair"; };
 
             // Create Crosshair Size +/- Buttons
             AddButton((uint)m_position.x + 20, (uint)m_position.y + 60, 30, 30, 
