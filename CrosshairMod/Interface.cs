@@ -19,8 +19,7 @@ namespace CrosshairMod
         private static bool m_visible = false;
 
         // Stores all Buttons used in the interface.
-        // TODO: Create function to easily add Buttons
-        private static Dictionary<string, GUIButton> m_buttons = new Dictionary<string, GUIButton>();
+        private static List<GUIButton> m_buttons = new List<GUIButton>();
 
         // Values of the RGBA Sliders
         private static int rSliderValue, gSliderValue, bSliderValue, aSliderValue;
@@ -32,6 +31,19 @@ namespace CrosshairMod
         // Position ind dimension of the GUI background
         private static Vector2 m_position;
         private static Vector2 m_dimension;
+
+
+        // Creates a new button object and adds it to the ButtonList
+        private static void AddButton(uint x, uint y, uint width, uint height, string label, params EventHandler[] onClickEvent)
+        {
+            GUIButton buttonObj = new GUIButton(x, y, width, height, label);
+            foreach(EventHandler e in onClickEvent)
+            {
+                buttonObj.OnClick += e;
+            }
+
+            m_buttons.Add(buttonObj);
+        }
 
         // Initializes all Buttons, gives them their function etc
         public static void Init()
@@ -49,22 +61,24 @@ namespace CrosshairMod
             // Apply Texture to Style
             m_style.normal.background = m_background;
 
+            AddButton(3, 3, 3, 3, "", (object sender, EventArgs e) => { });
+
             // Create Crosshair Visibilty Button
             // TODO: Make Button change label depending on Crosshait State (e.g. if it's hidden the label should be "Show", and vice versa)
-            m_buttons.Add("visibility", new GUIButton((uint)m_position.x + 20, (uint)m_position.y + 20, 200, 30, "Toggle Crosshair"));
-            m_buttons["visibility"].OnClick += (object sender, EventArgs e) => { Crosshair.Toggle(); };
+            AddButton((uint)m_position.x + 20, (uint)m_position.y + 20, 200, 30, 
+                "Toggle Crosshair", (object sender, EventArgs e) => { Crosshair.Toggle(); });
 
             // Create Crosshair Size +/- Buttons
-            m_buttons.Add("size-", new GUIButton((uint)m_position.x + 20, (uint)m_position.y + 60, 30, 30, "-"));
-            m_buttons.Add("size+", new GUIButton((uint)m_position.x + 190, (uint)m_position.y + 60, 30, 30, "+"));
-            m_buttons["size-"].OnClick += (object sender, EventArgs e) => { Crosshair.ChangeSize(-1); };
-            m_buttons["size+"].OnClick += (object sender, EventArgs e) => { Crosshair.ChangeSize(+1); };
+            AddButton((uint)m_position.x + 20, (uint)m_position.y + 60, 30, 30, 
+                "-", (object sender, EventArgs e) => { Crosshair.ChangeSize(-1); });
+            AddButton((uint)m_position.x + 190, (uint)m_position.y + 60, 30, 30, 
+                "+", (object sender, EventArgs e) => { Crosshair.ChangeSize(+1); });
 
             // Create Crosshair Thickness +/- Buttons
-            m_buttons.Add("thick-", new GUIButton((uint)m_position.x + 20, (uint)m_position.y + 100, 30, 30, "-"));
-            m_buttons.Add("thick+", new GUIButton((uint)m_position.x + 190, (uint)m_position.y + 100, 30, 30, "+"));
-            m_buttons["thick-"].OnClick += (object sender, EventArgs e) => { Crosshair.ChangeThickness(-1); };
-            m_buttons["thick+"].OnClick += (object sender, EventArgs e) => { Crosshair.ChangeThickness(+1); };
+            AddButton((uint)m_position.x + 20, (uint)m_position.y + 100, 30, 30, 
+                "-", (object sender, EventArgs e) => { Crosshair.ChangeThickness(-1); });
+            AddButton((uint)m_position.x + 190, (uint)m_position.y + 100, 30, 30, 
+                "+", (object sender, EventArgs e) => { Crosshair.ChangeThickness(+1); });
 
             // Assign setting values to sliders
             rSliderValue = Settings.GetValue("crosshairColorRed");
@@ -116,9 +130,9 @@ namespace CrosshairMod
         // Calls the Update function on all Buttons to check if they were pressed, and execute their Action
         private static void HandleButtons()
         {
-            foreach(KeyValuePair<string, GUIButton> pair in m_buttons)
+            foreach(GUIButton button in m_buttons)
             {
-                pair.Value.Update();
+                button.Update();
             }
         }
     }
