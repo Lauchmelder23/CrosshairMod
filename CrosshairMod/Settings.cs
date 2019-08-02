@@ -8,7 +8,7 @@ namespace CrosshairMod
 {
     /*
      * The class that is responsible for loading and storing all the
-     * necessary settings. There's much room for improvement.
+     * necessary settings. There is much room for improvement.
      */
     static class Settings
     {

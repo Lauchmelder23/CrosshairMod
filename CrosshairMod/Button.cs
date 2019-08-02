@@ -19,8 +19,12 @@ namespace CrosshairMod
         public Vector2 position = new Vector2(0, 0);
         public Vector2 dimensions = new Vector2(0, 0);
 
+        // Visibilty variables
+        private bool m_visible = true;
+        private bool m_active = true;
+
         // Label of the Button
-        public string label = "";
+        public string label { get; set; } = "";
 
         // OnClick event
         public event EventHandler OnClick;
@@ -41,14 +45,29 @@ namespace CrosshairMod
             // Empty
         }
 
+
+        // Changes visibilty of the Button
+        public void Toggle()
+        {
+            m_visible = !m_visible;
+        }
+
+        // Changes Usabilty of the button
+        public void Activate()
+        {
+            m_active = !m_active;
+        }
+
         // Updates and Draws the Button.
-        // TODO: Seperate PressChecking and Rendering in order to have Disabled Buttons
         public void Update()
         {
-            // Get if the Button was pressed and invoke OnClick event accordingly
-            bool buttonPressed = GUI.Button(new Rect(position, dimensions), label);
-            if (buttonPressed)
-                OnClick?.Invoke(this, EventArgs.Empty);
+            if (m_visible)
+            {
+                // Get if the Button was pressed and invoke OnClick event accordingly
+                bool buttonPressed = GUI.Button(new Rect(position, dimensions), label);
+                if (buttonPressed && m_active)
+                    OnClick?.Invoke(this, EventArgs.Empty);
+            }
         }
     }
 }
