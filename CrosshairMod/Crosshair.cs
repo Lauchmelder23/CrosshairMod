@@ -8,10 +8,17 @@ using UnityEngine;
 
 namespace CrosshairMod
 {
+    /* The class responsible for drawing/creating/administrating the crosshair.
+     * 
+     * This is where settings are applied to the crosshair.
+     */
     static class Crosshair
     {
+        // Crosshair Texture / Style
         private static Texture2D m_texture = new Texture2D(0, 0);
         private static GUIStyle m_style;
+
+        // If crosshair is visible or hidden
         private static bool m_enabled = true;
         private static bool m_validState = true;
 
@@ -112,8 +119,11 @@ namespace CrosshairMod
             m_style.normal.background = m_texture;
         }
 
+        // Render the Crosshair
         public static void Render()
         {
+            // If the crosshair is faulty, then don't execute this code
+            // This is here to stop the Logger from spamming the console.
             if (m_validState)
             {
                 if (InvalidCrosshair())
@@ -122,13 +132,14 @@ namespace CrosshairMod
                     return;
                 }
 
+                // Don't draw a hidden crosshair. Duh.
                 if (m_enabled)
                     GUI.Label(new Rect(Screen.width / 2 - m_texture.width / 2, Screen.height / 2 - m_texture.height / 2, m_texture.width, m_texture.height),
                         m_texture, m_style);
             }
         }
 
-
+        // Check Crosshair State
         private static bool InvalidCrosshair()
         {
             // Check if the texture is bigger than (0, 0) to see if it was initialized.

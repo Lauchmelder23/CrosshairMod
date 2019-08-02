@@ -6,14 +6,19 @@ using System.Threading.Tasks;
 
 namespace CrosshairMod
 {
+    /*
+     * The class that is responsible for loading and storing all the
+     * necessary settings. There is much room for improvement.
+     */
     static class Settings
     {
         // Initialize Settings dictionary
         private static Dictionary<string, int> m_settings = new Dictionary<string, int>();
 
+        // Load settings from file
         public static void LoadSettings(string filepath)
         {
-            Logging.Log("Accessing Settings at " + filepath);
+            Logging.Debug.Log("Accessing Settings at " + filepath);
 
             // Try to read file contents into string
             string settings = "";
@@ -43,7 +48,7 @@ namespace CrosshairMod
                 m_settings.Add(vals[0], Int32.Parse(vals[1]));   // Store key and value in settings dictionary
             }
 
-            Logging.Log("Successfully loaded settings!");
+            Logging.Debug.Log("Successfully loaded settings!");
         }
 
         // Converts the dictionary to a sett file
@@ -67,10 +72,10 @@ namespace CrosshairMod
             m_settings.Add(key, value);
         }
 
-        // Changes a settings value
+        // Changes a settings value, and adds it if specified
         public static void SetSetting(string key, int newVal, bool addIfDoesntExist = false)
         {
-
+            // If the setting doesn't exist, either add and set it, or print a Debug.Warning
             if(!m_settings.ContainsKey(key))
             {
                 if (!addIfDoesntExist)
@@ -81,7 +86,7 @@ namespace CrosshairMod
                 else
                 {
                     AddSetting(key, newVal);
-                    Logging.LogWarning("Tried to change a setting with key \"" + key + "\" that doesn't exist. It has been added now.");
+                    Logging.Debug.LogWarning("Tried to change a setting with key \"" + key + "\" that doesn't exist. It has been added now.");
                 }
             }
 
@@ -105,7 +110,7 @@ namespace CrosshairMod
                 else
                 {
                     AddSetting(key, initialValue);
-                    Logging.LogWarning("Tried to access unknown setting: \"" + key + "\". A new setting with this key was created.");
+                    Logging.Debug.LogWarning("Tried to access unknown setting: \"" + key + "\". A new setting with this key was created.");
                     return initialValue;
                 }
             }
