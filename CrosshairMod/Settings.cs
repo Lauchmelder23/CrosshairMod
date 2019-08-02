@@ -21,15 +21,39 @@ namespace CrosshairMod
             Logging.Debug.Log("Accessing Settings at " + filepath);
 
             // Try to read file contents into string
+            // If no file exists, create one
             string settings = "";
+            if(!System.IO.File.Exists(filepath))
+            {
+                // No settings file found, create one
+                Logging.Debug.LogWarning("Settings file not found, creating one...");
+                try
+                {
+                    System.IO.File.Create(filepath);
+                }
+                // If that fails then shit just hit the fan. React accordingly
+                catch(Exception e)
+                {
+                    Logging.LogError("Something went wrong while creating a settings file... :(");
+                    Logging.LogError(e.Message);
+                    Logging.LogError(e.StackTrace);
+
+                    return;
+                }
+            }
+            
+            // Read file to string
             try
             {
                 settings = System.IO.File.ReadAllText(filepath);
             }
+            // Something incredibly weird just happened
             catch (Exception e)
             {
-                // Log error and return invalid state
+                Logging.LogError("Something went wrong while reading a settings file... :(");
                 Logging.LogError(e.Message);
+                Logging.LogError(e.StackTrace);
+
                 return;
             }
 
@@ -48,7 +72,7 @@ namespace CrosshairMod
                 m_settings.Add(vals[0], Int32.Parse(vals[1]));   // Store key and value in settings dictionary
             }
 
-            Logging.Debug.Log("Successfully loaded settings!");
+            Logging.Log("Settings loaded.");
         }
 
         // Converts the dictionary to a sett file
@@ -80,7 +104,7 @@ namespace CrosshairMod
             {
                 if (!addIfDoesntExist)
                 {
-                    Logging.LogError("Tried to change a setting with key \"" + key + "\" that doesn't exist.");
+                    Logging.Debug.LogError("Tried to change a setting with key \"" + key + "\" that doesn't exist.");
                     return;
                 }
                 else
@@ -105,7 +129,7 @@ namespace CrosshairMod
             {
                 if (!addIfDoesntExist)
                 {
-                    Logging.LogError("Tried to access unknown setting: \"" + key + "\". Check your chSettings.sett for errors.");
+                    Logging.Debug.LogError("Tried to access unknown setting: \"" + key + "\". Check your chSettings.sett for errors.");
                 }
                 else
                 {

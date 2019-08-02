@@ -13,6 +13,8 @@ namespace CrosshairMod
      * 
      * Contains all Buttons, Sliders etc. that are able to modify the crosshair.
      */
+
+    // TODO: Create GUILayout.Window to make a less crappy version of the settings window
     static class Interface
     {
         // Saves wether the interface is visible or not
@@ -66,7 +68,6 @@ namespace CrosshairMod
             AddButton(3, 3, 3, 3, "", (object sender, EventArgs e) => { });
 
             // Create Crosshair Visibilty Button
-            // TODO: Make Button change label depending on Crosshait State (e.g. if it's hidden the label should be "Show", and vice versa)
             int index = AddButton((uint)m_position.x + 20, (uint)m_position.y + 20, 200, 30, 
                 "Hide Crosshair", (object sender, EventArgs e) => { Crosshair.Toggle(); });
             m_buttons[index].OnClick += (object sender, EventArgs args) => { m_buttons[index].label = (Crosshair.Enabled()) ? "Show Crosshair" : "Hide Crosshair"; };
