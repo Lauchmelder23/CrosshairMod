@@ -35,7 +35,7 @@ namespace CrosshairMod
         public event EventHandler OnClick;
 
         // Initialize Button
-        public GUIButton(uint x, uint y, uint width, uint height, string label)
+        public GUIButton(uint x, uint y, uint width, uint height, string label, params EventHandler[] OnClickEvent)
         {
             Logging.Debug.Log("Button Constructor");
 
@@ -43,6 +43,10 @@ namespace CrosshairMod
             this.position = new Vector2(x, y);
             this.dimensions = new Vector2(width, height);
             this.label = label;
+
+            // Push OnClickEvents
+            foreach(EventHandler e in OnClickEvent)
+                OnClick += e;
         }
 
         public GUIButton()

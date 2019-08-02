@@ -39,12 +39,7 @@ namespace CrosshairMod
         // Returns the index of the button
         private static int AddButton(uint x, uint y, uint width, uint height, string label, params EventHandler[] onClickEvent)
         {
-            GUIButton buttonObj = new GUIButton(x, y, width, height, label);
-            foreach(EventHandler e in onClickEvent)
-            {
-                buttonObj.OnClick += e;
-            }
-
+            GUIButton buttonObj = new GUIButton(x, y, width, height, label, onClickEvent);
             m_buttons.Add(buttonObj);
             return m_buttons.Count - 1;
         }
