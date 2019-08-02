@@ -44,9 +44,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Button.cs" />
+    <Compile Include="Interface\Button.cs" />
     <Compile Include="Crosshair.cs" />
     <Compile Include="Interface.cs" />
+    <Compile Include="Interface\InputObject.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
