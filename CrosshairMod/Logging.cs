@@ -31,14 +31,14 @@ namespace CrosshairMod
             public static void LogWarning(string message)
             {
 #if DEBUG
-                Logging.LogError(message);
+                Logging.LogWarning(message);
 #endif // DEBUG
             }
 
             public static void LogError(string message)
             {
 #if DEBUG
-                Debug.Log(PREFIX + "Error: " + message);
+                Logging.LogError(PREFIX + "Error: " + message);
 #endif // DEBUG
             }
         }
@@ -59,7 +59,7 @@ namespace CrosshairMod
         // Logs errors
         public static void LogError(string message)
         {
-            Debug.Log(PREFIX + "Error: " + message);
+            UnityEngine.Debug.Log(PREFIX + "Error: " + message);
         }
     }
 }

@@ -12,9 +12,14 @@ namespace CrosshairMod
      * A button wrapper class that is used right now as I don't have access to
      * the games buttons. Since UnityEngine.GUI only has a function to draw Buttons,
      * I made this class for easy handling.
+     * 
      */
     class GUIButton
     {
+        // da_google thinks this Button Wrapper is stupid, so let's see what ths Button Wrapper thinks about him
+        private const bool IS_DA_GOOGLE_STUPID = true;
+        // Interesting.
+
         // Position / Dimension of the Button.
         public Vector2 position = new Vector2(0, 0);
         public Vector2 dimensions = new Vector2(0, 0);

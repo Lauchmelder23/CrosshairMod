@@ -25,9 +25,8 @@ namespace CrosshairMod
     public class Main : MonoBehaviour
     {
         // Define Hotkeys for Menu and Crosshair Toggle
-        // TODO: Make Hotkeys editable for the User
-        private const string MENU_OPEN_KEY = "H";
-        private const string CH_TOGGLE_KEY = "J";
+        private char MENU_OPEN_KEY = 'H';
+        private char CH_TOGGLE_KEY = 'J';
 
         // This will be executed first
         void Start()
@@ -38,19 +37,23 @@ namespace CrosshairMod
             Crosshair.Create();
             // Create Panel
             Interface.Init();
+
+            // Load Hotkeys
+            MENU_OPEN_KEY = (char)Settings.GetValue("hotkeyCrosshairToggle", true, MENU_OPEN_KEY);
+            CH_TOGGLE_KEY = (char)Settings.GetValue("hotkeyGUIToggle", true, CH_TOGGLE_KEY);
         }
 
         // This gets called on every GUI Update (Can be multiple tiems per Frame)
         void OnGUI()
         {
             // Check for Key presses
-            if(Event.current.Equals(Event.KeyboardEvent(MENU_OPEN_KEY)))
+            if (Event.current.Equals(Event.KeyboardEvent(MENU_OPEN_KEY.ToString())))
             {
                 // Toggle Crosshair GUI
                 Interface.Toggle();
             }
 
-            if (Event.current.Equals(Event.KeyboardEvent(CH_TOGGLE_KEY)))
+            if (Event.current.Equals(Event.KeyboardEvent(CH_TOGGLE_KEY.ToString())))
             {
                 // Toggle Crosshair
                 Crosshair.Toggle();
