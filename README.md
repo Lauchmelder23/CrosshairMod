@@ -28,3 +28,8 @@ With Version v0.3 you can now toggle the crosshair with *J*, and you can open a 
     * Colour
   * Added Hotkeys to open GUI (H) and to toggle the Crosshair (J)
   * Added auto-save, so any editing you do to the crosshair gets saved into the settings file.
+
+#### v0.3.1
+ * Hotkeys can now be changed in the settings
+ * A missing settings file will no longer crash the mod
+ * Updated GUI Window. It looks nice now
