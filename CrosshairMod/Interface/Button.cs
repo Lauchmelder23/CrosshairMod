@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 
 using UnityEngine;
 
@@ -27,7 +27,8 @@ namespace CrosshairMod
         public string label { get; set; } = "";
 
         // Initialize Button
-        public GUIButton(string label, params EventHandler[] OnClickEvent)
+        public GUIButton(float x, float y, float width, float height, string label, string ID, params EventHandler[] OnClickEvent)
+            : base(x, y, width, height, ID)
         {
             Logging.Debug.Log("Button Constructor");
 
@@ -39,7 +40,8 @@ namespace CrosshairMod
                 OnClick += e;
         }
 
-        public GUIButton()
+        public GUIButton(string ID)
+            : base(0, 0, 0, 0, ID)
         {
             // Empty
         }
@@ -48,7 +50,8 @@ namespace CrosshairMod
         public override float Update()
         {
             // Get if the Button was pressed and invoke OnClick event accordingly
-            bool buttonPressed = GUILayout.Button(label);
+            bool buttonPressed = GUI.Button(new Rect(position, dimensions), label);
+            if (buttonPressed)
                 OnClick?.Invoke(this, EventArgs.Empty);
 
             return (buttonPressed ? 1.0f : 0.0f);
