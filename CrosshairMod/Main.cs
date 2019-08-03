@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 using UnityEngine;
 
 namespace CrosshairMod
@@ -31,6 +31,7 @@ namespace CrosshairMod
         // This will be executed first
         void Start()
         {
+
             // Update the settings
             Settings.LoadSettings(".\\Blackwake_Data\\Managed\\Mods\\chSettings.sett");
             // Create Crosshair

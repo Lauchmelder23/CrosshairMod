@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CrosshairMod</RootNamespace>
     <AssemblyName>CrosshairMod</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,9 +45,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Button.cs" />
+    <Compile Include="Interface\Button.cs" />
     <Compile Include="Crosshair.cs" />
     <Compile Include="Interface.cs" />
+    <Compile Include="Interface\InputObject.cs" />
+    <Compile Include="Interface\Slider.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

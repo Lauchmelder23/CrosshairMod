@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 
 using UnityEngine;
 
@@ -21,7 +21,7 @@ namespace CrosshairMod
         private static bool m_visible = false;
 
         // Stores all Buttons used in the interface.
-        private static List<GUIButton> m_buttons = new List<GUIButton>();
+        private static List<InputObject> m_inputs = new List<InputObject>();
 
         // Values of the RGBA Sliders
         private static int rSliderValue, gSliderValue, bSliderValue, aSliderValue;
@@ -35,13 +35,19 @@ namespace CrosshairMod
         private static Vector2 m_dimension;
 
 
-        // Creates a new button object and adds it to the ButtonList
-        // Returns the index of the button
-        private static int AddButton(uint x, uint y, uint width, uint height, string label, params EventHandler[] onClickEvent)
+        // Creates a new button object and adds it to the List
+        private static void AddButton(float x, float y, float width, float height, string label, string ID, params EventHandler[] onClickEvent)
         {
-            GUIButton buttonObj = new GUIButton(x, y, width, height, label, onClickEvent);
-            m_buttons.Add(buttonObj);
-            return m_buttons.Count - 1;
+            GUIButton buttonObj = new GUIButton(x, y, width, height, label, ID, onClickEvent);
+            m_inputs.Add(buttonObj);
+        }
+
+        // Creates a new slider object and adds it to the List
+        // Returns the index of the button
+        private static void AddSlider(float x, float y, float width, float height, float min, float max, float init, string ID)
+        {
+            GUISlider sliderObj = new GUISlider(x, y, width, height, min, max, init, ID);
+            m_inputs.Add(sliderObj);
         }
 
         // Initializes all Buttons, gives them their function etc
@@ -60,30 +66,33 @@ namespace CrosshairMod
             // Apply Texture to Style
             m_style.normal.background = m_background;
 
-            AddButton(3, 3, 3, 3, "", (object sender, EventArgs e) => { });
-
             // Create Crosshair Visibilty Button
-            int index = AddButton((uint)m_position.x + 20, (uint)m_position.y + 20, 200, 30, 
-                "Hide Crosshair", (object sender, EventArgs e) => { Crosshair.Toggle(); });
-            m_buttons[index].OnClick += (object sender, EventArgs args) => { m_buttons[index].label = (Crosshair.Enabled()) ? "Show Crosshair" : "Hide Crosshair"; };
+            AddButton(m_position.x + 20, m_position.y + 20, 200, 30,
+                (Crosshair.Enabled() ? "Hide Crosshair" : "Show Crosshair"), "Toggle", (object sender, EventArgs e) => { Crosshair.Toggle(); },
+                (object sender, EventArgs e) => { GUIButton btn = (GUIButton)sender; btn.label = (Crosshair.Enabled() ? "Hide Crosshair" : "Show Crosshair"); });
 
             // Create Crosshair Size +/- Buttons
-            AddButton((uint)m_position.x + 20, (uint)m_position.y + 60, 30, 30, 
-                "-", (object sender, EventArgs e) => { Crosshair.ChangeSize(-1); });
-            AddButton((uint)m_position.x + 190, (uint)m_position.y + 60, 30, 30, 
-                "+", (object sender, EventArgs e) => { Crosshair.ChangeSize(+1); });
+            AddButton(m_position.x + 20, m_position.y + 60, 30, 30, 
+                "-", "sizedown", (object sender, EventArgs e) => { Crosshair.ChangeSize(-1); });
+            AddButton(m_position.x + 190, m_position.y + 60, 30, 30, 
+                "+", "sizeup", (object sender, EventArgs e) => { Crosshair.ChangeSize(+1); });
 
             // Create Crosshair Thickness +/- Buttons
-            AddButton((uint)m_position.x + 20, (uint)m_position.y + 100, 30, 30, 
-                "-", (object sender, EventArgs e) => { Crosshair.ChangeThickness(-1); });
-            AddButton((uint)m_position.x + 190, (uint)m_position.y + 100, 30, 30, 
-                "+", (object sender, EventArgs e) => { Crosshair.ChangeThickness(+1); });
+            AddButton(m_position.x + 20, m_position.y + 100, 30, 30, 
+                "-", "thickdown", (object sender, EventArgs e) => { Crosshair.ChangeThickness(-1); });
+            AddButton(m_position.x + 190, m_position.y + 100, 30, 30, 
+                "+", "thickup", (object sender, EventArgs e) => { Crosshair.ChangeThickness(+1); });
 
-            // Assign setting values to sliders
             rSliderValue = Settings.GetValue("crosshairColorRed");
             gSliderValue = Settings.GetValue("crosshairColorGreen");
             bSliderValue = Settings.GetValue("crosshairColorBlue");
             aSliderValue = Settings.GetValue("crosshairColorAlpha");
+
+            // Create RGBA Sliders
+            AddSlider(m_position.x + m_dimension.x / 2 + 60, m_position.y + 20, 200, 30, 0, 255, rSliderValue, "red");
+            AddSlider(m_position.x + m_dimension.x / 2 + 60, m_position.y + 60, 200, 30, 0, 255, gSliderValue, "green");
+            AddSlider(m_position.x + m_dimension.x / 2 + 60, m_position.y + 100, 200, 30, 0, 255, bSliderValue, "blue");
+            AddSlider(m_position.x + m_dimension.x / 2 + 60, m_position.y + 140, 200, 30, 0, 255, aSliderValue, "alpha");
         }
 
         // Displays / Hides the menu
@@ -107,18 +116,17 @@ namespace CrosshairMod
                 // Draw the RGBA Labels and Sliders
                 // TODO: Find better way to handle Sliders. Maybe make some InputInterface class that handles Buttons/Sliders etc
                 GUI.Label(new Rect(m_position.x + m_dimension.x / 2 + 20, m_position.y + 30, 200, 30), "R: " + rSliderValue);
-                rSliderValue = (int)GUI.HorizontalSlider(new Rect(m_position.x + m_dimension.x / 2 + 60, m_position.y + 20, 200, 30), (int)rSliderValue, 0f, 255f);
-
                 GUI.Label(new Rect(m_position.x + m_dimension.x / 2 + 20, m_position.y + 70, 200, 30), "G: " + gSliderValue);
-                gSliderValue = (int)GUI.HorizontalSlider(new Rect(m_position.x + m_dimension.x / 2 + 60, m_position.y + 60, 200, 30), (int)gSliderValue, 0f, 255f);
-
                 GUI.Label(new Rect(m_position.x + m_dimension.x / 2 + 20, m_position.y + 110, 200, 30), "B: " + bSliderValue);
-                bSliderValue = (int)GUI.HorizontalSlider(new Rect(m_position.x + m_dimension.x / 2 + 60, m_position.y + 100, 200, 30), (int)bSliderValue, 0f, 255f);
-
                 GUI.Label(new Rect(m_position.x + m_dimension.x / 2 + 20, m_position.y + 150, 200, 30), "A: " + aSliderValue);
-                aSliderValue = (int)GUI.HorizontalSlider(new Rect(m_position.x + m_dimension.x / 2 + 60, m_position.y + 140, 200, 30), (int)aSliderValue, 0f, 255f);
 
                 // Set crosshair Colour after getting slider values
+                IEnumerable<GUISlider> it = m_inputs.OfType<GUISlider>();
+                rSliderValue = (int)it.First(slider => slider.ID == "red").Value;
+                gSliderValue = (int)it.First(slider => slider.ID == "green").Value;
+                bSliderValue = (int)it.First(slider => slider.ID == "blue").Value;
+                aSliderValue = (int)it.First(slider => slider.ID == "alpha").Value;
+
                 Crosshair.SetColor(rSliderValue, gSliderValue, bSliderValue, aSliderValue);
 
                 // Update Buttons
@@ -129,9 +137,9 @@ namespace CrosshairMod
         // Calls the Update function on all Buttons to check if they were pressed, and execute their Action
         private static void HandleButtons()
         {
-            foreach(GUIButton button in m_buttons)
+            foreach(InputObject obj in m_inputs)
             {
-                button.Update();
+                obj.Update();
             }
         }
     }
