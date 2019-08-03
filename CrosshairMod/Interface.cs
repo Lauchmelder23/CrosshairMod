@@ -106,7 +106,6 @@ namespace CrosshairMod
             GUI.Label(new Rect(60, 110, 120, 30), "Thickness: " + Settings.GetValue("crosshairThickness"));
 
             // Draw the RGBA Labels and Sliders
-            // TODO: Find better way to handle Sliders. Maybe make some InputInterface class that handles Buttons/Sliders etc
             GUI.Label(new Rect(m_dimension.x / 2 + 20, 30, 200, 30), "R: " + rSliderValue);
             GUI.Label(new Rect(m_dimension.x / 2 + 20, 70, 200, 30), "G: " + gSliderValue);
             GUI.Label(new Rect(m_dimension.x / 2 + 20, 110, 200, 30), "B: " + bSliderValue);
