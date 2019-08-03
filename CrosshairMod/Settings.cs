@@ -2,29 +2,58 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace CrosshairMod
 {
+    /*
+     * The class that is responsible for loading and storing all the
+     * necessary settings. There is much room for improvement.
+     */
     static class Settings
     {
         // Initialize Settings dictionary
         private static Dictionary<string, int> m_settings = new Dictionary<string, int>();
 
+        // Load settings from file
         public static void LoadSettings(string filepath)
         {
-            Logging.Log("Accessing Settings at " + filepath);
+            Logging.Debug.Log("Accessing Settings at " + filepath);
 
             // Try to read file contents into string
+            // If no file exists, create one
             string settings = "";
+            if(!System.IO.File.Exists(filepath))
+            {
+                // No settings file found, create one
+                Logging.Debug.LogWarning("Settings file not found, creating one...");
+                try
+                {
+                    System.IO.File.Create(filepath);
+                }
+                // If that fails then shit just hit the fan. React accordingly
+                catch(Exception e)
+                {
+                    Logging.LogError("Something went wrong while creating a settings file... :(");
+                    Logging.LogError(e.Message);
+                    Logging.LogError(e.StackTrace);
+
+                    return;
+                }
+            }
+            
+            // Read file to string
             try
             {
                 settings = System.IO.File.ReadAllText(filepath);
             }
+            // Something incredibly weird just happened
             catch (Exception e)
             {
-                // Log error and return invalid state
+                Logging.LogError("Something went wrong while reading a settings file... :(");
                 Logging.LogError(e.Message);
+                Logging.LogError(e.StackTrace);
+
                 return;
             }
 
@@ -43,7 +72,7 @@ namespace CrosshairMod
                 m_settings.Add(vals[0], Int32.Parse(vals[1]));   // Store key and value in settings dictionary
             }
 
-            Logging.Log("Successfully loaded settings!");
+            Logging.Log("Settings loaded.");
         }
 
         // Converts the dictionary to a sett file
@@ -67,21 +96,21 @@ namespace CrosshairMod
             m_settings.Add(key, value);
         }
 
-        // Changes a settings value
+        // Changes a settings value, and adds it if specified
         public static void SetSetting(string key, int newVal, bool addIfDoesntExist = false)
         {
-
+            // If the setting doesn't exist, either add and set it, or print a Debug.Warning
             if(!m_settings.ContainsKey(key))
             {
                 if (!addIfDoesntExist)
                 {
-                    Logging.LogError("Tried to change a setting with key \"" + key + "\" that doesn't exist.");
+                    Logging.Debug.LogError("Tried to change a setting with key \"" + key + "\" that doesn't exist.");
                     return;
                 }
                 else
                 {
                     AddSetting(key, newVal);
-                    Logging.LogWarning("Tried to change a setting with key \"" + key + "\" that doesn't exist. It has been added now.");
+                    Logging.Debug.LogWarning("Tried to change a setting with key \"" + key + "\" that doesn't exist. It has been added now.");
                 }
             }
 
@@ -100,12 +129,12 @@ namespace CrosshairMod
             {
                 if (!addIfDoesntExist)
                 {
-                    Logging.LogError("Tried to access unknown setting: \"" + key + "\". Check your chSettings.sett for errors.");
+                    Logging.Debug.LogError("Tried to access unknown setting: \"" + key + "\". Check your chSettings.sett for errors.");
                 }
                 else
                 {
                     AddSetting(key, initialValue);
-                    Logging.LogWarning("Tried to access unknown setting: \"" + key + "\". A new setting with this key was created.");
+                    Logging.Debug.LogWarning("Tried to access unknown setting: \"" + key + "\". A new setting with this key was created.");
                     return initialValue;
                 }
             }
