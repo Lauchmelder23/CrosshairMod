@@ -22,7 +22,7 @@ namespace CrosshairMod
      * handling initializing and updating the components
      * of the crosshair mod. 
      */
-    public class Main : MonoBehaviour
+    public class CrosshairMod : MonoBehaviour
     {
         // Define Hotkeys for Menu and Crosshair Toggle
         private char MENU_OPEN_KEY = 'H';

@@ -100,7 +100,9 @@ namespace CrosshairMod
         // Renders the Panel, but also handles Updating the buttons
         private static void RenderFunc(int windowID)
         {
-           
+            // Make Window draggable
+            GUI.DragWindow(new Rect(0, 0, 10000, 20));
+            
             // Draw the Length and Thickness Labels
             GUI.Label(new Rect(60, 70, 120, 30), "Length: " + Settings.GetValue("crosshairLength"));
             GUI.Label(new Rect(60, 110, 120, 30), "Thickness: " + Settings.GetValue("crosshairThickness"));
