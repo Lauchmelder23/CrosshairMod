@@ -31,9 +31,8 @@ namespace CrosshairMod.Input
         /// <param name="min">Minimum Slider value</param>
         /// <param name="max">Maximum Slider value</param>
         /// <param name="init">Initial Slider value</param>
-        /// <param name="ID">ID</param>
-        public Slider(float x, float y, float width, float height, float min, float max, float init, string ID)
-            : base(x, y, width, height, ID)
+        public Slider(float x, float y, float width, float height, float min, float max, float init)
+            : base(x, y, width, height)
         {
             Min = min;
             Max = max;
@@ -43,9 +42,8 @@ namespace CrosshairMod.Input
         /// <summary>
         /// Sad, pathetic default constructor
         /// </summary>
-        /// <param name="ID"></param>
-        public Slider(string ID)
-            :base (0, 0, 0, 0, ID)
+        public Slider()
+            :base (0, 0, 0, 0)
         {
 
         }

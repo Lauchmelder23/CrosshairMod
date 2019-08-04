@@ -29,10 +29,9 @@ namespace CrosshairMod.Input
         /// <param name="width">Width</param>
         /// <param name="height">Height</param>
         /// <param name="label">Text inside the button</param>
-        /// <param name="ID">Button ID</param>
         /// <param name="OnClickEvent">Action to execute when button is pressed</param>
-        public Button(float x, float y, float width, float height, string label, string ID, params EventHandler[] OnClickEvent)
-            : base(x, y, width, height, ID)
+        public Button(float x, float y, float width, float height, string label, params EventHandler[] OnClickEvent)
+            : base(x, y, width, height)
         {
             Logging.Debug.Log("Button Constructor: " + label);
 
@@ -47,9 +46,8 @@ namespace CrosshairMod.Input
         /// <summary>
         /// Sad, pathetic default constructor
         /// </summary>
-        /// <param name="ID"></param>
-        public Button(string ID)
-            : base(0, 0, 0, 0, ID)
+        public Button()
+            : base(0, 0, 0, 0)
         {
             // Empty
         }
