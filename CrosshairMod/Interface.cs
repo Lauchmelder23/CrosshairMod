@@ -8,45 +8,65 @@ using UnityEngine;
 
 namespace CrosshairMod
 {
-
-    /* A class that handles the Crosshair GUI.
-     * 
-     * Contains all Buttons, Sliders etc. that are able to modify the crosshair.
-     */
-
-    // TODO: Create GUILayout.Window to make a less crappy version of the settings window
+    /// <summary>
+    /// Handles and contains every Object needed for the interface
+    /// </summary>
     static class Interface
     {
-        // Saves wether the interface is visible or not
         private static bool m_visible = false;
 
-        // Stores all Buttons used in the interface.
+        /// <summary>
+        /// A list of all Objects (That includes buttons, sliders etc) inside the GUI Window
+        /// This makes it easy to add more components if it is needed.
+        /// </summary>
         private static List<InputObject> m_inputs = new List<InputObject>();
+        // TODO: Replace with dictionary, the whole concept of having IDs inside the objects is stupid and unnecessary
 
-        // Values of the RGBA Sliders
+        /// <summary>
+        /// RGBA Slider values
+        /// </summary>
         private static int rSliderValue, gSliderValue, bSliderValue, aSliderValue;
    
-        // Position ind dimension of the GUI background
         private static Vector2 m_position;
         private static Vector2 m_dimension;
 
 
-        // Creates a new button object and adds it to the List
+        /// <summary>
+        /// Creates a new Button and adds it to the content list
+        /// </summary>
+        /// <param name="x">X-Position</param>
+        /// <param name="y">Y-position</param>
+        /// <param name="width">Width</param>
+        /// <param name="height">Height</param>
+        /// <param name="label">Text to be displayed on the button</param>
+        /// <param name="ID">Key of the Button</param>
+        /// <param name="onClickEvent">Action to be executed when the button is pressed</param>
         private static void AddButton(float x, float y, float width, float height, string label, string ID, params EventHandler[] onClickEvent)
         {
-            GUIButton buttonObj = new GUIButton(x, y, width, height, label, ID, onClickEvent);
+            Input.Button buttonObj = new Input.Button(x, y, width, height, label, ID, onClickEvent);
             m_inputs.Add(buttonObj);
         }
 
-        // Creates a new slider object and adds it to the List
-        // Returns the index of the button
+        /// <summary>
+        /// Creates a new Slider and adds ot to the content list
+        /// </summary>
+        /// <param name="x">X-Position</param>
+        /// <param name="y">Y-Position/param>
+        /// <param name="width">Width</param>
+        /// <param name="height">Height</param>
+        /// <param name="min">Minimum value of the slider</param>
+        /// <param name="max">Maximum value of the slider</param>
+        /// <param name="init">Starting value of the slider</param>
+        /// <param name="ID">Key of the slider</param>
         private static void AddSlider(float x, float y, float width, float height, float min, float max, float init, string ID)
         {
-            GUISlider sliderObj = new GUISlider(x, y, width, height, min, max, init, ID);
+            Input.Slider sliderObj = new Input.Slider(x, y, width, height, min, max, init, ID);
             m_inputs.Add(sliderObj);
         }
 
-        // Initializes all Buttons, gives them their function etc
+        /// <summary>
+        /// Creates all needed input objects and initializes window
+        /// </summary>
         public static void Init()
         {
             // Set dimension to 0.25 of the screen width/height
@@ -58,7 +78,7 @@ namespace CrosshairMod
             // Create Crosshair Visibilty Button
             AddButton(20, 20, 200, 30,
                 (Crosshair.Enabled() ? "Hide Crosshair" : "Show Crosshair"), "Toggle", (object sender, EventArgs e) => { Crosshair.Toggle(); },
-                (object sender, EventArgs e) => { GUIButton btn = (GUIButton)sender; btn.label = (Crosshair.Enabled() ? "Hide Crosshair" : "Show Crosshair"); });
+                (object sender, EventArgs e) => { Input.Button btn = (Input.Button)sender; btn.Label = (Crosshair.Enabled() ? "Hide Crosshair" : "Show Crosshair"); });
 
             // Create Crosshair Size +/- Buttons
             AddButton(20, 60, 30, 30, 
@@ -84,20 +104,21 @@ namespace CrosshairMod
             AddSlider(m_dimension.x / 2 + 60, 150, 200, 30, 0, 255, aSliderValue, "alpha");
         }
 
-        // Displays / Hides the menu
         public static void Toggle()
         {
             m_visible = !m_visible;
         }
 
-        // Renders the window
         public static void Render()
         {
+            // TODO: Think about making this a GUILayout.ModalWindow
             if (m_visible)
                 GUI.Window(420, new Rect(m_position, m_dimension), RenderFunc, "Crosshair Settings");
         }
 
-        // Renders the Panel, but also handles Updating the buttons
+        /// <summary>
+        /// Where actual rendering happens. Draws all objects and updated them
+        /// </summary>
         private static void RenderFunc(int windowID)
         {
             // Make Window draggable
@@ -114,7 +135,7 @@ namespace CrosshairMod
             GUI.Label(new Rect(m_dimension.x / 2 + 20, 150, 200, 30), "A: " + aSliderValue);
 
             // Set crosshair Colour after getting slider values
-            IEnumerable<GUISlider> it = m_inputs.OfType<GUISlider>();
+            IEnumerable<Input.Slider> it = m_inputs.OfType<Input.Slider>();
             rSliderValue = (int)it.First(slider => slider.ID == "red").Value;
             gSliderValue = (int)it.First(slider => slider.ID == "green").Value;
             bSliderValue = (int)it.First(slider => slider.ID == "blue").Value;
@@ -123,12 +144,14 @@ namespace CrosshairMod
             Crosshair.SetColor(rSliderValue, gSliderValue, bSliderValue, aSliderValue);
 
             // Update Buttons
-            HandleButtons();
+            HandleInputObjects();
             
         }
 
-        // Calls the Update function on all Buttons to check if they were pressed, and execute their Action
-        private static void HandleButtons()
+        /// <summary>
+        /// Calls the Update function of each input object
+        /// </summary>
+        private static void HandleInputObjects()
         {
             foreach(InputObject obj in m_inputs)
             {

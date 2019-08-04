@@ -1,11 +1,10 @@
 ﻿/* 
- * Source code of a mode that adds a crosshair into
+ * Source code of a mod that adds a crosshair into
  * the game Blackwake.
  * 
  * @author Lauchmelder
- * @version v0.3
+ * @version v0.3.1
  */
-
 
 using System;
 using System.Collections.Generic;
@@ -16,24 +15,22 @@ using UnityEngine;
 
 namespace CrosshairMod
 { 
-
-    /*
-     * This is the Main class that is responsible for
-     * handling initializing and updating the components
-     * of the crosshair mod. 
-     */
+    /// <summary>
+    /// Class that gets loaded by the ModLoader. Calls every component of the Mod
+    /// </summary>
     public class CrosshairMod : MonoBehaviour
     {
-        // Define Hotkeys for Menu and Crosshair Toggle
+        /// <summary>
+        /// Default Hotkey Definitions
+        /// </summary>
         private char MENU_OPEN_KEY = 'H';
         private char CH_TOGGLE_KEY = 'J';
 
-        // This will be executed first
         void Start()
         {
 
             // Update the settings
-            Settings.LoadSettings(".\\Blackwake_Data\\Managed\\Mods\\chSettings.sett");
+            Settings.LoadSettings(".\\Blackwake_Data\\Managed\\Mods\\Assets\\chSettings.sett");
             // Create Crosshair
             Crosshair.Create();
             // Create Panel
@@ -44,7 +41,6 @@ namespace CrosshairMod
             CH_TOGGLE_KEY = (char)Settings.GetValue("hotkeyGUIToggle", true, CH_TOGGLE_KEY);
         }
 
-        // This gets called on every GUI Update (Can be multiple tiems per Frame)
         void OnGUI()
         {
             // Check for Key presses
@@ -66,11 +62,10 @@ namespace CrosshairMod
             Crosshair.Render();
         }
 
-        // Will be called when the application is closed
         void OnApplicationQuit()
         {
             // Save settings
-            Settings.SaveSettings(".\\Blackwake_Data\\Managed\\Mods\\chSettings.sett");
+            Settings.SaveSettings(".\\Blackwake_Data\\Managed\\Mods\\Assets\\chSettings.sett");
             Logging.Debug.Log("Saved Settings");
         }
     }
