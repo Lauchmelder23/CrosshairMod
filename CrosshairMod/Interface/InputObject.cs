@@ -6,7 +6,7 @@ using System.Text;
 
 using UnityEngine;
 
-namespace CrosshairMod
+namespace CrosshairMod.Input
 {
     /// <summary>
     /// Base class for all InputObjects. Defines basic attributes that
@@ -15,9 +15,6 @@ namespace CrosshairMod
     abstract class InputObject
     {
         public Vector2 position, dimensions;
-        
-        // TODO: Remove once dictionary was implemented
-        public readonly string ID;
 
         /// <summary>
         /// Create new InputObject
@@ -26,12 +23,10 @@ namespace CrosshairMod
         /// <param name="y">Y-Position</param>
         /// <param name="width">Width</param>
         /// <param name="height">Height</param>
-        /// <param name="ID">ID</param>
-        public InputObject(float x, float y, float width, float height, string ID)
+        public InputObject(float x, float y, float width, float height)
         {
             this.position = new Vector2(x, y);
             this.dimensions = new Vector2(width, height);
-            this.ID = ID;
         }
 
         /// <summary>

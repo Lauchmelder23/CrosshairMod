@@ -19,8 +19,7 @@ namespace CrosshairMod
         /// A list of all Objects (That includes buttons, sliders etc) inside the GUI Window
         /// This makes it easy to add more components if it is needed.
         /// </summary>
-        private static List<InputObject> m_inputs = new List<InputObject>();
-        // TODO: Replace with dictionary, the whole concept of having IDs inside the objects is stupid and unnecessary
+        private static Dictionary<string, Input.InputObject> m_inputs = new Dictionary<string, Input.InputObject>();
 
         /// <summary>
         /// RGBA Slider values
@@ -43,8 +42,8 @@ namespace CrosshairMod
         /// <param name="onClickEvent">Action to be executed when the button is pressed</param>
         private static void AddButton(float x, float y, float width, float height, string label, string ID, params EventHandler[] onClickEvent)
         {
-            Input.Button buttonObj = new Input.Button(x, y, width, height, label, ID, onClickEvent);
-            m_inputs.Add(buttonObj);
+            Input.Button buttonObj = new Input.Button(x, y, width, height, label, onClickEvent);
+            m_inputs.Add(ID, buttonObj);
         }
 
         /// <summary>
@@ -60,8 +59,8 @@ namespace CrosshairMod
         /// <param name="ID">Key of the slider</param>
         private static void AddSlider(float x, float y, float width, float height, float min, float max, float init, string ID)
         {
-            Input.Slider sliderObj = new Input.Slider(x, y, width, height, min, max, init, ID);
-            m_inputs.Add(sliderObj);
+            Input.Slider sliderObj = new Input.Slider(x, y, width, height, min, max, init);
+            m_inputs.Add(ID, sliderObj);
         }
 
         /// <summary>
@@ -111,7 +110,6 @@ namespace CrosshairMod
 
         public static void Render()
         {
-            // TODO: Think about making this a GUILayout.ModalWindow
             if (m_visible)
                 GUI.Window(420, new Rect(m_position, m_dimension), RenderFunc, "Crosshair Settings");
         }
@@ -136,10 +134,10 @@ namespace CrosshairMod
 
             // Set crosshair Colour after getting slider values
             IEnumerable<Input.Slider> it = m_inputs.OfType<Input.Slider>();
-            rSliderValue = (int)it.First(slider => slider.ID == "red").Value;
-            gSliderValue = (int)it.First(slider => slider.ID == "green").Value;
-            bSliderValue = (int)it.First(slider => slider.ID == "blue").Value;
-            aSliderValue = (int)it.First(slider => slider.ID == "alpha").Value;
+            rSliderValue = (int)((Input.Slider)m_inputs["red"]).Value;
+            gSliderValue = (int)((Input.Slider)m_inputs["green"]).Value;
+            bSliderValue = (int)((Input.Slider)m_inputs["blue"]).Value;
+            aSliderValue = (int)((Input.Slider)m_inputs["alpha"]).Value;
 
             Crosshair.SetColor(rSliderValue, gSliderValue, bSliderValue, aSliderValue);
 
@@ -153,9 +151,9 @@ namespace CrosshairMod
         /// </summary>
         private static void HandleInputObjects()
         {
-            foreach(InputObject obj in m_inputs)
+            foreach(KeyValuePair<string, Input.InputObject> obj in m_inputs)
             {
-                obj.Update();
+                obj.Value.Update();
             }
         }
     }
