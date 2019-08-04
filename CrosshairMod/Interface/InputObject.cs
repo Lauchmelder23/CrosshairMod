@@ -8,21 +8,25 @@ using UnityEngine;
 
 namespace CrosshairMod
 {
-    /*
-     * Base of all Input Objects.
-     * 
-     * Any Input Object that wants to be displayed in the Interface must
-     * inherit from this class.
-     */
+    /// <summary>
+    /// Base class for all InputObjects. Defines basic attributes that
+    /// every input object needs
+    /// </summary>
     abstract class InputObject
     {
-        // position and dimension of the object
         public Vector2 position, dimensions;
-
-        // ID of the Object
+        
+        // TODO: Remove once dictionary was implemented
         public readonly string ID;
 
-        // constructor to set position and size
+        /// <summary>
+        /// Create new InputObject
+        /// </summary>
+        /// <param name="x">X-Position</param>
+        /// <param name="y">Y-Position</param>
+        /// <param name="width">Width</param>
+        /// <param name="height">Height</param>
+        /// <param name="ID">ID</param>
         public InputObject(float x, float y, float width, float height, string ID)
         {
             this.position = new Vector2(x, y);
@@ -30,7 +34,11 @@ namespace CrosshairMod
             this.ID = ID;
         }
 
-        // the update method (that works as renderer) must be overriden by each object
+        /// <summary>
+        /// The Update method every Input Object needs.
+        /// This is needed to store all kinds of input objects in one List for example
+        /// </summary>
+        /// <returns>Value of the Object</returns>
         public abstract float Update();
     }
 }

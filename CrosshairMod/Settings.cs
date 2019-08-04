@@ -6,16 +6,17 @@ using System.Text;
 
 namespace CrosshairMod
 {
-    /*
-     * The class that is responsible for loading and storing all the
-     * necessary settings. There is much room for improvement.
-     */
+    /// <summary>
+    /// Loads, contains and handles settings
+    /// </summary>
     static class Settings
     {
-        // Initialize Settings dictionary
         private static Dictionary<string, int> m_settings = new Dictionary<string, int>();
 
-        // Load settings from file
+        /// <summary>
+        /// Load settings from file
+        /// </summary>
+        /// <param name="filepath"></param>
         public static void LoadSettings(string filepath)
         {
             Logging.Debug.Log("Accessing Settings at " + filepath);
@@ -75,7 +76,10 @@ namespace CrosshairMod
             Logging.Log("Settings loaded.");
         }
 
-        // Converts the dictionary to a sett file
+        /// <summary>
+        /// Converts dictionary to a string to be stored in the settings file
+        /// </summary>
+        /// <param name="filepath">Save location</param>
         public static void SaveSettings(string filepath)
         {
             string filecontent = "";
@@ -87,7 +91,11 @@ namespace CrosshairMod
             System.IO.File.WriteAllText(filepath, filecontent);
         }
 
-        // Adds a setting to the settings
+        /// <summary>
+        /// Create new setting and add it to the dictionary
+        /// </summary>
+        /// <param name="key">Setting name</param>
+        /// <param name="value">Setting value</param>
         public static void AddSetting(string key, int value)
         {
             if (m_settings.ContainsKey(key))
@@ -96,7 +104,12 @@ namespace CrosshairMod
             m_settings.Add(key, value);
         }
 
-        // Changes a settings value, and adds it if specified
+        /// <summary>
+        /// Change a settings value
+        /// </summary>
+        /// <param name="key">Setting name</param>
+        /// <param name="newVal">New setting value</param>
+        /// <param name="addIfDoesntExist">If the setting doesn't exist, create it</param>
         public static void SetSetting(string key, int newVal, bool addIfDoesntExist = false)
         {
             // If the setting doesn't exist, either add and set it, or print a Debug.Warning
@@ -117,9 +130,13 @@ namespace CrosshairMod
             m_settings[key] = newVal;
         }
 
-        // Tries to return the value belonging to a certain key
-        // If the specified key doesn't exist, it returns 0 and logs an error
-        // One can also specify that the setting should be created with some initial value
+        /// <summary>
+        /// Returns the value of a setting
+        /// </summary>
+        /// <param name="key">Setting name</param>
+        /// <param name="addIfDoesntExist">Add the setting if it doesn't exist</param>
+        /// <param name="initialValue">Initial value of the setting in case it doesn't exist</param>
+        /// <returns></returns>
         public static int GetValue(string key, bool addIfDoesntExist = false, int initialValue = 0)
         {
             int value = 0;

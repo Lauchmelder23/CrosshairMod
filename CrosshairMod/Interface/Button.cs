@@ -6,51 +6,62 @@ using System.Text;
 
 using UnityEngine;
 
-namespace CrosshairMod
+namespace CrosshairMod.Input
 {
-    /*
-     * A button wrapper class that is used right now as I don't have access to
-     * the games buttons. Since UnityEngine.GUI only has a function to draw Buttons,
-     * I made this class for easy handling.
-     * 
-     */
-    class GUIButton : InputObject
+    /// <summary>
+    /// Button wrapper for Unitys GUI.Button() function. I made this in order
+    /// to store buttons and render them in Lists
+    /// </summary>
+    class Button : InputObject
     {
-        // da_google thinks this Button Wrapper is stupid, so let's see what ths Button Wrapper thinks about him
-        private const bool IS_DA_GOOGLE_STUPID = true;
-        // Interesting.
-
-        // OnClick event
+        /// <summary>
+        /// Event Handler that contains the actions to execute when the Button was clicked
+        /// </summary>
         public event EventHandler OnClick;
 
-        // Label of the Button
-        public string label { get; set; } = "";
+        public string Label = "";
 
-        // Initialize Button
-        public GUIButton(float x, float y, float width, float height, string label, string ID, params EventHandler[] OnClickEvent)
+        /// <summary>
+        /// Create new Button
+        /// </summary>
+        /// <param name="x">X-Position</param>
+        /// <param name="y">Y-Position</param>
+        /// <param name="width">Width</param>
+        /// <param name="height">Height</param>
+        /// <param name="label">Text inside the button</param>
+        /// <param name="ID">Button ID</param>
+        /// <param name="OnClickEvent">Action to execute when button is pressed</param>
+        public Button(float x, float y, float width, float height, string label, string ID, params EventHandler[] OnClickEvent)
             : base(x, y, width, height, ID)
         {
-            Logging.Debug.Log("Button Constructor");
+            Logging.Debug.Log("Button Constructor: " + label);
 
             // Assign position, dimension and label
-            this.label = label;
+            this.Label = label;
 
             // Push OnClickEvents
             foreach(EventHandler e in OnClickEvent)
                 OnClick += e;
         }
 
-        public GUIButton(string ID)
+        /// <summary>
+        /// Sad, pathetic default constructor
+        /// </summary>
+        /// <param name="ID"></param>
+        public Button(string ID)
             : base(0, 0, 0, 0, ID)
         {
             // Empty
         }
 
-        // Updates and Draws the Button.
+        /// <summary>
+        /// Draws button and returns button state / executes button action
+        /// </summary>
+        /// <returns>1f if the button is pressed, 0f else</returns>
         public override float Update()
         {
             // Get if the Button was pressed and invoke OnClick event accordingly
-            bool buttonPressed = GUI.Button(new Rect(position, dimensions), label);
+            bool buttonPressed = GUI.Button(new Rect(position, dimensions), Label);
             if (buttonPressed)
                 OnClick?.Invoke(this, EventArgs.Empty);
 

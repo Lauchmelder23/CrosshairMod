@@ -8,34 +8,31 @@ using UnityEngine;
 
 namespace CrosshairMod
 {
-    /* The class responsible for drawing/creating/administrating the crosshair.
-     * 
-     * This is where settings are applied to the crosshair.
-     */
+    /// <summary>
+    /// Contains Crosshair information and draws/creates it
+    /// </summary>
     static class Crosshair
     {
-        // Crosshair Texture / Style
+        /// <summary>
+        /// Graphics information for the crosshair
+        /// </summary>
         private static Texture2D m_texture = new Texture2D(0, 0);
         private static GUIStyle m_style;
 
-        // If crosshair is visible or hidden
         private static bool m_enabled = true;
         private static bool m_validState = true;
 
-        // Toggles visibilty of the crosshair
         public static void Toggle()
         {
             m_enabled = !m_enabled;
             Settings.SetSetting("crosshairVisible", 1, true);
         }
 
-        // Returns wether the crosshair is enabled
         public static bool Enabled()
         {
             return m_enabled;
         }
 
-        // Change Color
         public static void SetColor(int r, int g, int b, int a)
         {
             Settings.SetSetting("crosshairColorRed", r);
@@ -46,7 +43,6 @@ namespace CrosshairMod
             Create();
         }
 
-        // Change Size
         public static void ChangeSize(int difference)
         {
             int currentLength = Settings.GetValue("crosshairLength");
@@ -56,7 +52,6 @@ namespace CrosshairMod
             Create();
         }
 
-        // Change Thickness
         public static void ChangeThickness(int difference)
         {
             int currentThickness = Settings.GetValue("crosshairThickness");
@@ -66,7 +61,9 @@ namespace CrosshairMod
             Create();
         }
 
-        // This must be called, or else no crosshair will be rendered
+        /// <summary>
+        /// Creates a new crosshair texture with the current settings
+        /// </summary>
         public static void Create()
         {
             // Creates a crosshair texture
@@ -125,7 +122,6 @@ namespace CrosshairMod
             m_style.normal.background = m_texture;
         }
 
-        // Render the Crosshair
         public static void Render()
         {
             // If the crosshair is faulty, then don't execute this code
